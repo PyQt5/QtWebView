@@ -37,7 +37,7 @@ bool QAndroidWebViewSettingsPrivate::localStorageEnabled() const
      return m_viewController.callMethod<jboolean>("isLocalStorageEnabled");
 }
 
-bool QAndroidWebViewSettingsPrivate::javascriptEnabled() const
+bool QAndroidWebViewSettingsPrivate::javaScriptEnabled() const
 {
     return m_viewController.callMethod<jboolean>("isJavaScriptEnabled");
 }
@@ -57,7 +57,7 @@ void QAndroidWebViewSettingsPrivate::setLocalContentCanAccessFileUrls(bool enabl
     m_viewController.callMethod<void>("setAllowFileAccessFromFileURLs", enabled);
 }
 
-void QAndroidWebViewSettingsPrivate::setJavascriptEnabled(bool enabled)
+void QAndroidWebViewSettingsPrivate::setJavaScriptEnabled(bool enabled)
 {
     m_viewController.callMethod<void>("setJavaScriptEnabled", enabled);
 }
@@ -170,19 +170,6 @@ QString QAndroidWebViewPrivate::title() const
     return m_viewController.callMethod<QString>("getTitle");
 }
 
-void QAndroidWebViewPrivate::setGeometry(const QRect &geometry)
-{
-    if (m_window == 0)
-        return;
-
-    m_window->setGeometry(geometry);
-}
-
-void QAndroidWebViewPrivate::setVisibility(QWindow::Visibility visibility)
-{
-    m_window->setVisibility(visibility);
-}
-
 void QAndroidWebViewPrivate::runJavaScriptPrivate(const QString &script,
                                                   int callbackId)
 {
@@ -226,11 +213,6 @@ void QAndroidWebViewPrivate::deleteAllCookies()
     });
 }
 
-void QAndroidWebViewPrivate::setVisible(bool visible)
-{
-    m_window->setVisible(visible);
-}
-
 int QAndroidWebViewPrivate::loadProgress() const
 {
     return m_viewController.callMethod<int>("getProgress");
@@ -241,25 +223,10 @@ bool QAndroidWebViewPrivate::isLoading() const
     return m_viewController.callMethod<bool>("isLoading");
 }
 
-void QAndroidWebViewPrivate::setParentView(QObject *view)
-{
-    m_window->setParent(qobject_cast<QWindow *>(view));
-}
-
-QObject *QAndroidWebViewPrivate::parentView() const
-{
-    return m_window->parent();
-}
-
 void QAndroidWebViewPrivate::stop()
 {
     m_viewController.callMethod<void>("stopLoading");
 }
-
-//void QAndroidWebViewPrivate::initialize()
-//{
-//    // TODO:
-//}
 
 void QAndroidWebViewPrivate::onApplicationStateChanged(Qt::ApplicationState state)
 {

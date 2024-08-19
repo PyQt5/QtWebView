@@ -11,7 +11,6 @@ qt_internal_add_module(WebView
         QtQuick/auto
     SOURCES
         qabstractwebview_p.h
-        qnativeviewcontroller_p.h
         qtwebviewfunctions.cpp qtwebviewfunctions.h
         qwebview.cpp qwebview_p.h
         qwebview_global.h

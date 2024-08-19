@@ -23,11 +23,11 @@ class QNullWebViewSettings : public QAbstractWebViewSettings
 public:
     explicit QNullWebViewSettings(QObject *p) : QAbstractWebViewSettings(p) {}
     bool localStorageEnabled() const override { return false; }
-    bool javascriptEnabled() const override { return false; }
+    bool javaScriptEnabled() const override { return false; }
     bool localContentCanAccessFileUrls() const override { return false; }
     bool allowFileAccess() const override { return false; }
     void setLocalContentCanAccessFileUrls(bool) override {}
-    void setJavascriptEnabled(bool) override {}
+    void setJavaScriptEnabled(bool) override {}
     void setLocalStorageEnabled(bool) override {}
     void setAllowFileAccess(bool) override {}
 };
@@ -39,11 +39,6 @@ public:
         : QAbstractWebView(p)
         , m_settings(new QNullWebViewSettings(this))
     {}
-    void setParentView(QObject *view) override { Q_UNUSED(view); }
-    QObject *parentView() const override { return nullptr; }
-    void setGeometry(const QRect &geometry) override { Q_UNUSED(geometry); }
-    void setVisibility(QWindow::Visibility visibility) override { Q_UNUSED(visibility); }
-    void setVisible(bool visible) override { Q_UNUSED(visible); }
 
     QString httpUserAgent() const override { return QString(); }
     void setHttpUserAgent(const QString &userAgent) override { Q_UNUSED(userAgent); }
@@ -66,6 +61,7 @@ public:
     void deleteCookie(const QString &domain, const QString &name) override
     { Q_UNUSED(domain); Q_UNUSED(name); }
     void deleteAllCookies() override {}
+    QWindow *nativeWindow() const override { return nullptr; }
 
 protected:
     QAbstractWebViewSettings *getSettings() const override
