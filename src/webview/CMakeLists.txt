@@ -44,8 +44,8 @@ if(ANDROID)
     set_property(TARGET WebView APPEND PROPERTY QT_ANDROID_LIB_DEPENDENCIES
         ${INSTALL_PLUGINSDIR}/webview/libplugins_webview_qtwebview_android.so
     )
-    set_property(TARGET WebView APPEND PROPERTY QT_ANDROID_PERMISSIONS
-        android.permission.ACCESS_FINE_LOCATION
+    qt_internal_add_android_permission(WebView
+        NAME android.permission.ACCESS_FINE_LOCATION
     )
 endif()
 qt_internal_add_docs(WebView
