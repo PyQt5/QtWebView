@@ -88,8 +88,6 @@ QQuickWebView::~QQuickWebView() { }
   \qmlproperty url QtWebView::WebView::httpUserAgent
   \since QtWebView 1.14
   The user agent in use.
-
-  \note on WinRT, this property affects all WebViews of the application.
 */
 
 void QQuickWebView::setHttpUserAgent(const QString &userAgent)
