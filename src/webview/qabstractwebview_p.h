@@ -16,7 +16,9 @@
 // We mean it.
 //
 
-#include "qwebviewinterface_p.h"
+#include <QtWebView/qwebview_global.h>
+#include <QtCore/qobject.h>
+#include <QtGui/qwindow.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -17,7 +17,6 @@
 //
 
 #include "qabstractwebview_p.h"
-#include "qwebviewinterface_p.h"
 #include <QtCore/qobject.h>
 #include <QtCore/qurl.h>
 #include <QtCore/qvariant.h>

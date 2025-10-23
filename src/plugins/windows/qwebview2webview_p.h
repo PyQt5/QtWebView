@@ -9,6 +9,7 @@
 
 #include <QMap>
 #include <QPointer>
+#include <QtCore/qurl.h>
 #include <webview2.h>
 #include <wrl.h>
 #include <wrl/client.h>

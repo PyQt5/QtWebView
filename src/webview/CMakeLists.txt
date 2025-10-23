@@ -15,7 +15,6 @@ qt_internal_add_module(WebView
         qwebview.cpp qwebview_p.h
         qwebview_global.h
         qwebviewfactory.cpp qwebviewfactory_p.h
-        qwebviewinterface_p.h
         qwebviewloadrequest.cpp qwebviewloadrequest_p.h
         qwebviewplugin.cpp qwebviewplugin_p.h
     LIBRARIES
