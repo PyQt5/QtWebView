@@ -512,7 +512,7 @@ void QDarwinWebViewPrivate::deleteAllCookies()
 
 QString QDarwinWebViewPrivate::httpUserAgent() const
 {
-    return QString::fromNSString(wkWebView.customUserAgent);
+    return QString::fromNSString([wkWebView valueForKey:@"userAgent"]);
 }
 
 void QDarwinWebViewPrivate::setHttpUserAgent(const QString &userAgent)
