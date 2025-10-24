@@ -57,6 +57,7 @@ public:
     virtual bool canGoBack() const = 0;
     virtual bool canGoForward() const = 0;
     virtual QString title() const = 0;
+    virtual QUrl url() const = 0;
     virtual int loadProgress() const = 0;
     virtual bool isLoading() const = 0;
     virtual void goBack() = 0;

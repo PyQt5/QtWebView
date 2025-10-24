@@ -106,6 +106,11 @@ void QWasmWebViewPrivate::setHttpUserAgent(const QString &userAgent)
     qWarning("setHttpUserAgent() not supported on this platform");
 }
 
+QUrl QWasmWebViewPrivate::url() const
+{
+    return m_currentUrl;
+}
+
 void QWasmWebViewPrivate::setUrl(const QUrl &url)
 {
     m_currentUrl = url;

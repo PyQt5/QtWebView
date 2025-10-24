@@ -61,6 +61,11 @@ void QWebEngineWebViewPrivate::setHttpUserAgent(const QString &userAgent)
     }
 }
 
+QUrl QWebEngineWebViewPrivate::url() const
+{
+    return m_webEngineView->url();
+}
+
 void QWebEngineWebViewPrivate::setUrl(const QUrl &url)
 {
     m_webEngineView->setUrl(url);

@@ -323,6 +323,11 @@ void QWebView2WebViewPrivate::setHttpUserAgent(const QString &userAgent)
     }
 }
 
+QUrl QWebView2WebViewPrivate::url() const
+{
+    return m_url;
+}
+
 void QWebView2WebViewPrivate::setUrl(const QUrl &url)
 {
     m_url = url;
