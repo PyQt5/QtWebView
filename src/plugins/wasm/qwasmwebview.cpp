@@ -214,7 +214,7 @@ void QWasmWebViewPrivate::runJavaScriptPrivate(const QString &script, int callba
     qWarning("runJavaScriptPrivate() not supported on this platform");
 }
 
-QAbstractWebViewSettings *QWasmWebViewPrivate::getSettings() const
+QAbstractWebViewSettings *QWasmWebViewPrivate::settings() const
 {
     return m_settings;
 }

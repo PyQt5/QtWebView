@@ -79,7 +79,7 @@ public:
     int loadProgress() const override;
     bool isLoading() const override;
 
-    QAbstractWebViewSettings *getSettings() const override;
+    QAbstractWebViewSettings *settings() const override;
     QWindow *nativeWindow() const override { return nullptr; }
 
 public Q_SLOTS:

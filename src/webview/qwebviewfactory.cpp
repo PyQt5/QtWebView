@@ -66,7 +66,7 @@ public:
     QWindow *nativeWindow() const override { return nullptr; }
 
 protected:
-    QAbstractWebViewSettings *getSettings() const override
+    QAbstractWebViewSettings *settings() const override
     {
         return m_settings;
     }

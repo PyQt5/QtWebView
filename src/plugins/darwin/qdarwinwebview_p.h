@@ -71,7 +71,7 @@ public:
     bool isLoading() const override;
 
     QWindow *nativeWindow() const override { return m_window; }
-    QAbstractWebViewSettings *getSettings() const override;
+    QAbstractWebViewSettings *settings() const override;
 
 public Q_SLOTS:
     void goBack() override;

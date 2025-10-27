@@ -91,7 +91,7 @@ public:
     int loadProgress() const override;
     bool isLoading() const override;
 
-    QWebViewSettings *getSettings() const override;
+    QWebViewSettings *settings() const override;
     QWindow *nativeWindow() const override;
 
     // NOTE: This is a temporary solution for WASM and should

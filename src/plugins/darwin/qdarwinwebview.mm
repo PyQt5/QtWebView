@@ -525,7 +525,7 @@ void QDarwinWebViewPrivate::setHttpUserAgent(const QString &userAgent)
 
 
 
-QAbstractWebViewSettings *QDarwinWebViewPrivate::getSettings() const
+QAbstractWebViewSettings *QDarwinWebViewPrivate::settings() const
 {
     return m_settings;
 }

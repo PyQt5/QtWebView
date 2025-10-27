@@ -94,8 +94,8 @@ void tst_QWebView::load()
 
     WebViewFactory factory;
     QWebView &view = factory.webViewRef();
-    view.getSettings()->setAllowFileAccess(true);
-    view.getSettings()->setLocalContentCanAccessFileUrls(true);
+    view.settings()->setAllowFileAccess(true);
+    view.settings()->setLocalContentCanAccessFileUrls(true);
     QCOMPARE(view.loadProgress(), 0);
     const QUrl url = QUrl::fromLocalFile(fileName);
     view.setUrl(url);
@@ -210,8 +210,8 @@ void tst_QWebView::loadRequest()
         WebViewFactory factory;
         QWebView &view = factory.webViewRef();
 
-        view.getSettings()->setAllowFileAccess(true);
-        view.getSettings()->setLocalContentCanAccessFileUrls(true);
+        view.settings()->setAllowFileAccess(true);
+        view.settings()->setLocalContentCanAccessFileUrls(true);
         QCOMPARE(view.loadProgress(), 0);
         const QUrl url = QUrl::fromLocalFile(fileName);
         QSignalSpy loadChangedSingalSpy(&view, SIGNAL(loadingChanged(QWebViewLoadRequestPrivate)));
@@ -237,8 +237,8 @@ void tst_QWebView::loadRequest()
     {
         WebViewFactory factory;
         QWebView &view = factory.webViewRef();
-        view.getSettings()->setAllowFileAccess(true);
-        view.getSettings()->setLocalContentCanAccessFileUrls(true);
+        view.settings()->setAllowFileAccess(true);
+        view.settings()->setLocalContentCanAccessFileUrls(true);
         QCOMPARE(view.loadProgress(), 0);
         QSignalSpy loadChangedSingalSpy(&view, SIGNAL(loadingChanged(QWebViewLoadRequestPrivate)));
         view.setUrl(QUrl(QStringLiteral("file:///file_that_does_not_exist.html")));
@@ -263,9 +263,9 @@ void tst_QWebView::setAndDeleteCookie()
 {
     WebViewFactory factory;
     QWebView &view = factory.webViewRef();
-    view.getSettings()->setLocalStorageEnabled(true);
-    view.getSettings()->setAllowFileAccess(true);
-    view.getSettings()->setLocalContentCanAccessFileUrls(true);
+    view.settings()->setLocalStorageEnabled(true);
+    view.settings()->setAllowFileAccess(true);
+    view.settings()->setLocalContentCanAccessFileUrls(true);
 
     QSignalSpy cookieAddedSpy(&view, SIGNAL(cookieAdded(QString,QString)));
     QSignalSpy cookieRemovedSpy(&view, SIGNAL(cookieRemoved(QString,QString)));

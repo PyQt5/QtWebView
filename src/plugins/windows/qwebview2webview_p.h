@@ -98,7 +98,7 @@ private Q_SLOTS:
 
 protected:
     void runJavaScriptPrivate(const QString &script, int callbackId) override;
-    QAbstractWebViewSettings *getSettings() const override;
+    QAbstractWebViewSettings *settings() const override;
 
 private:
     ComPtr<ICoreWebView2Controller> m_webviewController;

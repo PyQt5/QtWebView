@@ -138,7 +138,7 @@ void QWebEngineWebViewPrivate::deleteAllCookies()
     m_cookieStore->deleteAllCookies();
 }
 
-QAbstractWebViewSettings *QWebEngineWebViewPrivate::getSettings() const
+QAbstractWebViewSettings *QWebEngineWebViewPrivate::settings() const
 {
     return m_settings;
 }

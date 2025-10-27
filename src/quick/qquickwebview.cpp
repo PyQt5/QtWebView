@@ -66,7 +66,7 @@ Q_GLOBAL_STATIC(CallbackStorage, callbacks)
 QQuickWebView::QQuickWebView(QQuickItem *parent)
     : QQuickWindowContainer(parent)
     , m_webView(new QWebView(this))
-    , m_settings(new QQuickWebViewSettings(m_webView->getSettings(), this))
+    , m_settings(new QQuickWebViewSettings(m_webView->settings(), this))
 {
     if (QWindow *nativeWindow = m_webView->nativeWindow())
         onNativeWindowChanged(nativeWindow);

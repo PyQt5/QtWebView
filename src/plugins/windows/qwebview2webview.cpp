@@ -679,7 +679,7 @@ void QWebView2WebViewPrivate::runJavaScriptPrivate(const QString &script, int ca
     }
 }
 
-QAbstractWebViewSettings *QWebView2WebViewPrivate::getSettings() const
+QAbstractWebViewSettings *QWebView2WebViewPrivate::settings() const
 {
     return m_settings;
 }

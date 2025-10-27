@@ -50,7 +50,7 @@ class Q_WEBVIEW_EXPORT QAbstractWebView
     Q_OBJECT
 
 public:
-    virtual QAbstractWebViewSettings *getSettings() const = 0;
+    virtual QAbstractWebViewSettings *settings() const = 0;
     virtual QString httpUserAgent() const = 0;
     virtual void setHttpUserAgent(const QString &httpUserAgent) = 0;
     virtual void setUrl(const QUrl &url) = 0;
@@ -95,4 +95,3 @@ protected:
 QT_END_NAMESPACE
 
 #endif // QABSTRACTWEBVIEW_P_H
-

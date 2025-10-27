@@ -194,7 +194,7 @@ void QAndroidWebViewPrivate::runJavaScriptPrivate(const QString &script,
     m_viewController.callMethod<void>("runJavaScript", script, jlong(callbackId));
 }
 
-QAbstractWebViewSettings *QAndroidWebViewPrivate::getSettings() const
+QAbstractWebViewSettings *QAndroidWebViewPrivate::settings() const
 {
     return m_settings;
 }

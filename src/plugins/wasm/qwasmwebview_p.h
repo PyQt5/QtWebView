@@ -84,7 +84,7 @@ public Q_SLOTS:
 protected:
     void runJavaScriptPrivate(const QString& script,
                               int callbackId) final;
-    QAbstractWebViewSettings *getSettings() const final;
+    QAbstractWebViewSettings *settings() const final;
 
 private:
     Q_INVOKABLE void initializeIFrame();

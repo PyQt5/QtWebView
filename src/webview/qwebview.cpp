@@ -13,7 +13,7 @@ QT_BEGIN_NAMESPACE
 QWebView::QWebView(QObject *p)
     : QAbstractWebView(p)
     , d(QWebViewFactory::createWebView())
-    , m_settings(new QWebViewSettings(d->getSettings()))
+    , m_settings(new QWebViewSettings(d->settings()))
     , m_progress(0)
 {
     d->setParent(this);
@@ -102,7 +102,7 @@ bool QWebView::isLoading() const
     return d->isLoading();
 }
 
-QWebViewSettings *QWebView::getSettings() const
+QWebViewSettings *QWebView::settings() const
 {
     return m_settings;
 }
