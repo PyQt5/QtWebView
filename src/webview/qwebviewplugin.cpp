@@ -15,7 +15,7 @@ QWebViewPlugin::~QWebViewPlugin()
 
 }
 
-QAbstractWebView *QWebViewPlugin::create(const QString &key) const
+QAbstractWebView *QWebViewPlugin::create(const QString &key, QObject *parent) const
 {
     return nullptr;
 }

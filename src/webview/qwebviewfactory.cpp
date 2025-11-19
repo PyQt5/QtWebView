@@ -75,16 +75,16 @@ private:
     QNullWebViewSettings *m_settings = nullptr;
 };
 
-QAbstractWebView *QWebViewFactory::createWebView()
+QAbstractWebView *QWebViewFactory::createWebView(QObject *parent)
 {
     QAbstractWebView *wv = nullptr;
     QWebViewPlugin *plugin = getPlugin();
     if (plugin)
-        wv = plugin->create(QStringLiteral("webview"));
+        wv = plugin->create(QStringLiteral("webview"), parent);
 
     if (!wv || !plugin) {
         qWarning("No WebView plug-in found!");
-        wv = new QNullWebView;
+        wv = new QNullWebView(parent);
     }
 
     return wv;

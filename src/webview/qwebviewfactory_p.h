@@ -24,7 +24,7 @@ class QWebViewPlugin;
 namespace QWebViewFactory
 {
     QWebViewPlugin *getPlugin();
-    QAbstractWebView *createWebView();
+    QAbstractWebView *createWebView(QObject *parent = nullptr);
     bool requiresExtraInitializationSteps();
     Q_WEBVIEW_EXPORT bool loadedPluginHasKey(const QString key);
 };

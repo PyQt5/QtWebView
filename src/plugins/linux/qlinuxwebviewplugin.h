@@ -27,7 +27,7 @@ class QLinuxWebViewPlugin : public QWebViewPlugin
     Q_OBJECT
 
 public:
-    QAbstractWebView *create(const QString &key) const override;
+    QAbstractWebView *create(const QString &key, QObject *parent = nullptr) const override;
 
     void prepare() const override;
 };

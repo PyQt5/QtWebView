@@ -6,9 +6,9 @@
 
 QT_BEGIN_NAMESPACE
 
-QAbstractWebView *QLinuxWebViewPlugin::create(const QString &key) const
+QAbstractWebView *QLinuxWebViewPlugin::create(const QString &key, QObject *parent) const
 {
-    return (key == QLatin1String("webview")) ? new QLinuxWebViewPrivate() : nullptr;
+    return (key == QLatin1String("webview")) ? new QLinuxWebViewPrivate(parent) : nullptr;
 }
 
 void QLinuxWebViewPlugin::prepare() const { }

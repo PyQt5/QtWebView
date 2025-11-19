@@ -29,7 +29,7 @@ public:
     explicit QWebViewPlugin(QObject *parent = nullptr);
     virtual ~QWebViewPlugin();
 
-    virtual QAbstractWebView *create(const QString &key) const;
+    virtual QAbstractWebView *create(const QString &key, QObject *parent = nullptr) const;
 
     virtual void prepare() const;
 };

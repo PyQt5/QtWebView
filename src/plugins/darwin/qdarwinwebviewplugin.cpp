@@ -8,9 +8,9 @@
 
 QT_BEGIN_NAMESPACE
 
-QAbstractWebView *QDarwinWebViewPlugin::create(const QString &key) const
+QAbstractWebView *QDarwinWebViewPlugin::create(const QString &key, QObject *parent) const
 {
-    return (key == QLatin1String("webview")) ? new QDarwinWebViewPrivate() : nullptr;
+    return (key == QLatin1String("webview")) ? new QDarwinWebViewPrivate(parent) : nullptr;
 }
 
 void QDarwinWebViewPlugin::prepare() const { }
