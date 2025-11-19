@@ -71,11 +71,17 @@ protected:
     QAbstractWebViewSettings *getSettings() const override;
 
 private:
+    void urlChangedCallback();
+    void titleChangedCallback();
+    void loadProgressCallback();
+    void loadChangedCallback(uint32_t ev);
+    void loadFailedCallback(uint32_t ev, const char *url, const char *message);
+
+private:
     void *m_webview; // WebKitWebView
     void *m_widget; // GtkWidget
     QLinuxWebViewSettingsPrivate *m_settings;
     QWindow *m_window;
-    bool m_isLoading;
     QUrl m_url;
 };
 

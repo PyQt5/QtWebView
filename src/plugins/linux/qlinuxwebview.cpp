@@ -18,11 +18,6 @@
 #include <gtk/gtkx.h>
 // clang-format on
 
-#ifndef Q_ASSERT_SUCCEEDED
-#  define Q_ASSERT_SUCCEEDED(hr) \
-      Q_ASSERT_X(SUCCEEDED(hr), Q_FUNC_INFO, qPrintable(qt_error_string(hr)));
-#endif
-
 QLinuxWebViewSettingsPrivate::QLinuxWebViewSettingsPrivate(QObject *p) : QAbstractWebViewSettings(p)
 {
 }
@@ -74,8 +69,7 @@ QLinuxWebViewPrivate::QLinuxWebViewPrivate(QObject *parent)
       m_settings(new QLinuxWebViewSettingsPrivate(this)),
       m_webview(nullptr),
       m_widget(nullptr),
-      m_window(nullptr),
-      m_isLoading(false)
+      m_window(nullptr)
 {
     // Initialize GTK
     gtk_init(nullptr, nullptr);
@@ -116,14 +110,58 @@ void QLinuxWebViewPrivate::initialize(void *hWnd)
             Qt::QueuedConnection);
     connect(m_window, &QWindow::screenChanged, this, &QLinuxWebViewPrivate::updateWindowGeometry,
             Qt::QueuedConnection);
+
+    g_signal_connect_swapped(m_widget, "destroy", G_CALLBACK(+[](QLinuxWebViewPrivate *instance) {
+                                 qDebug() << "webview container destroy";
+                             }),
+                             this);
+    g_signal_connect_swapped(m_webview, "destroy", G_CALLBACK(+[](QLinuxWebViewPrivate *instance) {
+                                 qDebug() << "webview destroy";
+                             }),
+                             this);
+
+    // url change
+    g_signal_connect_swapped(m_webview, "notify::uri",
+                             G_CALLBACK(+[](QLinuxWebViewPrivate *instance, GParamSpec *pspec) {
+                                 instance->urlChangedCallback();
+                             }),
+                             this);
+
+    // title change
+    g_signal_connect_swapped(m_webview, "notify::title",
+                             G_CALLBACK(+[](QLinuxWebViewPrivate *instance, GParamSpec *pspec) {
+                                 instance->titleChangedCallback();
+                             }),
+                             this);
+
+    // load progress change
+    g_signal_connect_swapped(m_webview, "notify::estimated-load-progress",
+                             G_CALLBACK(+[](QLinuxWebViewPrivate *instance, GParamSpec *pspec) {
+                                 instance->loadProgressCallback();
+                             }),
+                             this);
+
+    // load status
+    g_signal_connect_swapped(m_webview, "load-changed",
+                             G_CALLBACK(+[](QLinuxWebViewPrivate *instance, WebKitLoadEvent event) {
+                                 instance->loadChangedCallback(event);
+                             }),
+                             this);
+
+    // load failed
+    g_signal_connect_swapped(m_webview, "load-failed",
+                             G_CALLBACK(+[](QLinuxWebViewPrivate *instance, WebKitLoadEvent event,
+                                            char *url, GError *error) -> gboolean {
+                                 instance->loadFailedCallback(event, url, error->message);
+                                 return false;
+                             }),
+                             this);
 }
 
 QLinuxWebViewPrivate::~QLinuxWebViewPrivate()
 {
-    if (m_webview) {
-        g_object_unref(m_webview);
-        m_webview = nullptr;
-    }
+    stop();
+
     if (m_widget) {
         GtkWidget *widget = (GtkWidget *)m_widget;
         gtk_widget_hide(widget);
@@ -138,42 +176,79 @@ QLinuxWebViewPrivate::~QLinuxWebViewPrivate()
 
 QString QLinuxWebViewPrivate::httpUserAgent() const
 {
+    if (m_webview) {
+        WebKitSettings *settings =
+                webkit_web_view_get_settings(static_cast<WebKitWebView *>(m_webview));
+        if (settings) {
+            return webkit_settings_get_user_agent(settings);
+        }
+    }
+
     return "";
 }
 
-void QLinuxWebViewPrivate::setHttpUserAgent(const QString &userAgent) { }
+void QLinuxWebViewPrivate::setHttpUserAgent(const QString &userAgent)
+{
+    if (m_webview) {
+        WebKitSettings *settings =
+                webkit_web_view_get_settings(static_cast<WebKitWebView *>(m_webview));
+        if (settings) {
+            return webkit_settings_set_user_agent(settings, userAgent.toUtf8().constData());
+        }
+    }
+}
 
 void QLinuxWebViewPrivate::setUrl(const QUrl &url)
 {
     m_url = url;
     if (m_webview && url.isValid()) {
-        webkit_web_view_load_uri((WebKitWebView *)m_webview, url.toString().toStdString().c_str());
+        webkit_web_view_load_uri((WebKitWebView *)m_webview, url.toString().toUtf8().constData());
     }
 }
 
 bool QLinuxWebViewPrivate::canGoBack() const
 {
+    if (m_webview) {
+        return webkit_web_view_can_go_back(static_cast<WebKitWebView *>(m_webview));
+    }
+
     return false;
 }
 
 bool QLinuxWebViewPrivate::canGoForward() const
 {
+    if (m_webview) {
+        return webkit_web_view_can_go_forward(static_cast<WebKitWebView *>(m_webview));
+    }
+
     return false;
 }
 
 QString QLinuxWebViewPrivate::title() const
 {
-    return QString();
+    if (m_webview) {
+        return webkit_web_view_get_title(static_cast<WebKitWebView *>(m_webview));
+    }
+
+    return "";
 }
 
 int QLinuxWebViewPrivate::loadProgress() const
 {
-    return m_isLoading ? 0 : 100;
+    if (!m_webview) {
+        return 0;
+    }
+
+    return webkit_web_view_get_estimated_load_progress(static_cast<WebKitWebView *>(m_webview))
+            * 100;
 }
 
 bool QLinuxWebViewPrivate::isLoading() const
 {
-    return m_isLoading;
+    if (m_webview) {
+        return webkit_web_view_is_loading(static_cast<WebKitWebView *>(m_webview));
+    }
+    return false;
 }
 
 QWindow *QLinuxWebViewPrivate::nativeWindow() const
@@ -181,13 +256,33 @@ QWindow *QLinuxWebViewPrivate::nativeWindow() const
     return m_window;
 }
 
-void QLinuxWebViewPrivate::goBack() { }
+void QLinuxWebViewPrivate::goBack()
+{
+    if (m_webview) {
+        webkit_web_view_go_back(static_cast<WebKitWebView *>(m_webview));
+    }
+}
 
-void QLinuxWebViewPrivate::goForward() { }
+void QLinuxWebViewPrivate::goForward()
+{
+    if (m_webview) {
+        webkit_web_view_go_forward(static_cast<WebKitWebView *>(m_webview));
+    }
+}
 
-void QLinuxWebViewPrivate::reload() { }
+void QLinuxWebViewPrivate::reload()
+{
+    if (m_webview) {
+        webkit_web_view_reload(static_cast<WebKitWebView *>(m_webview));
+    }
+}
 
-void QLinuxWebViewPrivate::stop() { }
+void QLinuxWebViewPrivate::stop()
+{
+    if (m_webview) {
+        webkit_web_view_stop_loading(static_cast<WebKitWebView *>(m_webview));
+    }
+}
 
 void QLinuxWebViewPrivate::loadHtml(const QString &html, const QUrl &baseUrl)
 {
@@ -220,4 +315,53 @@ void QLinuxWebViewPrivate::runJavaScriptPrivate(const QString &script, int callb
 QAbstractWebViewSettings *QLinuxWebViewPrivate::getSettings() const
 {
     return m_settings;
+}
+
+void QLinuxWebViewPrivate::urlChangedCallback()
+{
+    m_url = webkit_web_view_get_uri(static_cast<WebKitWebView *>(m_webview));
+    emit urlChanged(QUrl(m_url));
+}
+
+void QLinuxWebViewPrivate::titleChangedCallback()
+{
+    emit titleChanged(title());
+}
+
+void QLinuxWebViewPrivate::loadProgressCallback()
+{
+    emit loadProgressChanged(loadProgress());
+}
+
+void QLinuxWebViewPrivate::loadChangedCallback(uint32_t ev)
+{
+    WebKitWebView *webview = static_cast<WebKitWebView *>(m_webview);
+    WebKitLoadEvent event = static_cast<WebKitLoadEvent>(ev);
+
+    QUrl url(webkit_web_view_get_uri(webview));
+
+    switch (event) {
+    case WEBKIT_LOAD_STARTED:
+        QMetaObject::invokeMethod(
+                this, "loadingChanged", Qt::QueuedConnection,
+                Q_ARG(QWebViewLoadRequestPrivate,
+                      QWebViewLoadRequestPrivate(url, QWebView::LoadStartedStatus, "")));
+        break;
+    case WEBKIT_LOAD_FINISHED:
+        QMetaObject::invokeMethod(
+                this, "loadingChanged", Qt::QueuedConnection,
+                Q_ARG(QWebViewLoadRequestPrivate,
+                      QWebViewLoadRequestPrivate(url, QWebView::LoadStoppedStatus, "")));
+        break;
+    default:
+        break;
+    }
+}
+
+void QLinuxWebViewPrivate::loadFailedCallback(uint32_t ev, const char *url, const char *message)
+{
+    QMetaObject::invokeMethod(
+            this, "loadingChanged", Qt::QueuedConnection,
+            Q_ARG(QWebViewLoadRequestPrivate,
+                  QWebViewLoadRequestPrivate(QUrl(url), QWebView::LoadFailedStatus, message)));
 }
